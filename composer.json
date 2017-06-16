@@ -1,0 +1,21 @@
+{
+  "name": "kilik/translation-bundle",
+  "description": "Symfony Tool to help Import/Export (missing) translations",
+  "keywords": ["symfony", "translation"],
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Michel NAUD",
+      "role": "Author"
+    }
+  ],
+  "require": {
+    "php": "~5.6|~7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kilik\\TranslationBundle\\": ""
+    }
+  }
+}
