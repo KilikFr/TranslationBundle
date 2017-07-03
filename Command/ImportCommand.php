@@ -2,6 +2,7 @@
 /**
  * This class is inspired from https://github.com/lexik/LexikTranslationBundle.
  */
+
 namespace Kilik\TranslationBundle\Command;
 
 use Kilik\TranslationBundle\Components\CsvLoader;
@@ -13,10 +14,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Dumper;
 
 /**
- * Class ImportCommand
+ * Class ImportCommand.
  */
 class ImportCommand extends ContainerAwareCommand
 {
+
     /**
      * @var \Symfony\Component\Console\Input\InputInterface
      */
@@ -51,7 +53,7 @@ class ImportCommand extends ContainerAwareCommand
         $locales = explode(',', $input->getArgument('locales'));
 
         // load CSV file
-        $importTranslations = CsvLoader::load($input->getArgument('csv'),$bundlesNames,$domains,$locales);
+        $importTranslations = CsvLoader::load($input->getArgument('csv'), $bundlesNames, $domains, $locales);
 
         // load translations for matched bundles
         $bundles = [];
@@ -65,7 +67,7 @@ class ImportCommand extends ContainerAwareCommand
         $service->loadBundlesTranslationFiles($bundles, $locales, $domains);
 
         // merge translations
-        $allTranslations = array_merge($service->getTranslations(), $importTranslations);
+        $allTranslations = array_merge_recursive($service->getTranslations(), $importTranslations);
 
         // rewrite files (Bundle/domain.locale.yml)
         foreach ($allTranslations as $bundleName => $bundleTranslations) {
@@ -109,14 +111,15 @@ class ImportCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param        $arr
-     * @param        $path
-     * @param        $value
-     * @param string $separator
+     * @param array  $arr
+     * @param string $path
+     * @param string $value
+     * @param string $delimiter
+     * @param string $escape
      */
-    public function assignArrayByPath(&$arr, $path, $value, $separator = '.')
+    public function assignArrayByPath(&$arr, $path, $value, $delimiter = '.', $escape = '\\')
     {
-        $keys = explode($separator, $path);
+        $keys = explode($delimiter, $path);
 
         foreach ($keys as $key) {
             $arr = &$arr[$key];

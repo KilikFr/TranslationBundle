@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class LoadTranslationService
+ * Class LoadTranslationService.
  *
  * load translations from common yaml symfony resources files
  */
@@ -36,6 +36,7 @@ class LoadTranslationService
     public function __construct($rootDir)
     {
         $this->rootDir = $rootDir;
+        $this->translations = [];
     }
 
     /**
