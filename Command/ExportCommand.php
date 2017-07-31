@@ -69,7 +69,7 @@ class ExportCommand extends ContainerAwareCommand
 
                     $data = [$bundleName, $domain, $trKey];
                     if (isset($trLocales[$locale])) {
-                        $data[] = $trLocales[$locale];
+                        $data[] = $this->fixMultiLine($trLocales[$locale]);
                     } else {
                         $data[] = '';
                         $missing = true;
@@ -77,7 +77,7 @@ class ExportCommand extends ContainerAwareCommand
 
                     foreach ($locales as $trLocale) {
                         if (isset($trLocales[$trLocale])) {
-                            $data[] = $trLocales[$trLocale];
+                            $data[] = $this->fixMultiLine($trLocales[$trLocale]);
                         } else {
                             $data[] = '';
                             $missing = true;
@@ -92,5 +92,22 @@ class ExportCommand extends ContainerAwareCommand
         }
         file_put_contents($input->getArgument('csv'), $buffer);
         $output->writeln('<info>Saving translations to : '.$input->getArgument('csv').' (CSV tab separated value).</info>');
+    }
+
+    /**
+     * Makes sure translation files with multi line strings result in correct csv files.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    protected function fixMultiLine($str)
+    {
+        $str = str_replace(PHP_EOL, "\\n", $str);
+        if (substr($str, -2) === "\\n") {
+            $str = substr($str, 0, -2);//Not doing this results in \n at the end of some strings after import.
+        }
+
+        return $str;
     }
 }
