@@ -67,7 +67,7 @@ class ImportCommand extends ContainerAwareCommand
         $service->loadBundlesTranslationFiles($bundles, $locales, $domains);
 
         // merge translations
-        $allTranslations = array_merge_recursive($service->getTranslations(), $importTranslations);
+        $allTranslations = array_replace_recursive($service->getTranslations(), $importTranslations);
 
         // rewrite files (Bundle/domain.locale.yml)
         foreach ($allTranslations as $bundleName => $bundleTranslations) {
