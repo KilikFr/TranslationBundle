@@ -14,6 +14,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class LoadTranslationService
 {
+
     /**
      * translations (bundle name/domain/key=>value).
      *
@@ -40,6 +41,29 @@ class LoadTranslationService
     }
 
     /**
+     * Get Symfony 4 app translations path
+     *
+     * @return string
+     */
+    public function getAppTranslationsPath()
+    {
+        return $this->rootDir.'/../translations';
+    }
+
+    /**
+     * Load app translation file (for symfony 4+ applications)
+     *
+     * @param array $locales
+     * @param array $domains
+     */
+    public function loadAppTranslationFiles($locales, $domains)
+    {
+        $path = $this->getAppTranslationsPath();
+        $finder = $this->findTranslationsFiles($path, $locales, $domains, false);
+        $this->loadTranslationFiles('app', $finder);
+    }
+
+    /**
      * Imports translation files form bundles.
      *
      * @param array $bundles
@@ -48,8 +72,14 @@ class LoadTranslationService
      */
     public function loadBundlesTranslationFiles($bundles, $locales, $domains)
     {
-        foreach ($bundles as $bundle) {
-            $this->loadBundleTranslationFiles($bundle, $locales, $domains);
+        if (isset($bundles['app'])) {
+            $this->loadAppTranslationFiles($locales, $domains);
+        }
+
+        foreach ($bundles as $bundleName => $bundle) {
+            if ('app' !== $bundleName) {
+                $this->loadBundleTranslationFiles($bundle, $locales, $domains);
+            }
         }
     }
 

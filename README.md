@@ -3,6 +3,10 @@ Kilik Translation Bundle
 
 KTB (Kilik Translation Bundle) is a tool to be used with Symfony Translator. It tries to simplify the exchanges with the (human) translators.
 
+**Note for Symfony 3.4+ / Symfony 4+ projects**
+
+> Since symfony applications are not a bundle, we use the special bundle name 'app' to handle import and export of application translations not located into a bundle
+
 From the command line you can export translations (filtering with bundles names, domains, and locales) to CSV (Tab separators).
 
 Your translator (colleague, service provider, etc...) can open CSV files with specific translator tools (or with Office Software).
@@ -50,6 +54,10 @@ export only some domains:
 
     ./bin/console kilik:translation:export en fr,es AcmeBundle --domains messages,validators ~/translations.csv
 
+export application only translations (Symfony 3.4+ / Symfony 4+1):
+
+    ./bin/console kilik:translation:export en fr app ~/translations.csv
+
 Import translations
 ===================
 
@@ -70,3 +78,7 @@ import translations from your CSV file, for domains, for a given locales:
 you can also import translations with many locales:
 
     ./bin/console kilik:translation:import fr,es,nl ~/translations.csv
+
+import translations from your CSV file, for application only translations (Symfony 3.4+ / Symfony 4+1):
+
+    ./bin/console kilik:translation:import fr app ~/translations.csv
