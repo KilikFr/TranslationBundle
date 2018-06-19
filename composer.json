@@ -3,7 +3,7 @@
   "description": "Symfony Tool to help Import/Export (missing) translations",
   "keywords": ["symfony", "translation"],
   "license": "MIT",
-  "type": "library",
+  "type": "symfony-bundle",
   "authors": [
     {
       "name": "Michel NAUD",
