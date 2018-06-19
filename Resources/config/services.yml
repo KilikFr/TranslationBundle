@@ -2,3 +2,6 @@ services:
     kilik.translation.services.load_translation_service:
         arguments: ['%kernel.root_dir%']
         class: Kilik\TranslationBundle\Services\LoadTranslationService
+
+imports:
+  - { resource: commands.yml }

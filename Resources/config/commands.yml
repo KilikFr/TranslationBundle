@@ -1,0 +1,9 @@
+services:
+  kilik.translation.command.export:
+    class: Kilik\TranslationBundle\Command\ExportCommand
+    tags:
+        - { name: console.command, command: kilik:translation:export }
+  kilik.translation.command.import:
+    class: Kilik\TranslationBundle\Command\ImportCommand
+    tags:
+        - { name: console.command, command: kilik:translation:import }
