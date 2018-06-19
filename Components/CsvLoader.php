@@ -7,13 +7,14 @@ namespace Kilik\TranslationBundle\Components;
  */
 class CsvLoader
 {
+
     /**
      * Load CSV File.
      *
      * @param       $filepath
-     * @param array $bundles  bundles names to load
-     * @param array $domains  domains to load
-     * @param array $locales  locales to load
+     * @param array $bundles bundles names to load
+     * @param array $domains domains to load
+     * @param array $locales locales to load
      *
      * @throws \Exception
      *
@@ -58,7 +59,8 @@ class CsvLoader
                 if (in_array($bundleName, $bundles) || count($bundles) == 1 && $bundles[0] == 'all') {
                     if (in_array($domainName, $domains) || count($domains) == 1 && $domains[0] == 'all') {
                         foreach ($locales as $locale) {
-                            $value = $row[$localesKeys[$locale]];
+                            // replace new line unescaped by reald newline (works good wy yaml dumper)
+                            $value = str_replace('\n', "\n", $row[$localesKeys[$locale]]);
                             // keep only non blank translations
                             if ($value) {
                                 // bundle / domain / key
