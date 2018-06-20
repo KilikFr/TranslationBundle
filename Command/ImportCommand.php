@@ -6,6 +6,7 @@
 namespace Kilik\TranslationBundle\Command;
 
 use Kilik\TranslationBundle\Components\CsvLoader;
+use Kilik\TranslationBundle\Services\LoadTranslationService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,6 +30,24 @@ class ImportCommand extends ContainerAwareCommand
      */
     private $output;
 
+    /**
+     * Load translation service
+     *
+     * @var LoadTranslationService
+     */
+    private $loadService;
+
+    /**
+     * @param LoadTranslationService $service
+     */
+    public function setLoadService(LoadTranslationService $service)
+    {
+        $this->loadService = $service;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function configure()
     {
         $this
@@ -40,12 +59,14 @@ class ImportCommand extends ContainerAwareCommand
             ->addOption('bundles', null, InputOption::VALUE_OPTIONAL, 'Limit to bundles', 'all');
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
 
-        $service = $this->getContainer()->get('kilik.translation.services.load_translation_service');
         $fs = $this->getContainer()->get('filesystem');
 
         $bundlesNames = explode(',', $input->getOption('bundles'));
@@ -60,14 +81,16 @@ class ImportCommand extends ContainerAwareCommand
 
         // load existing translations on working bundles
         foreach ($importTranslations as $bundleName => $notused) {
-            $bundle = $this->getApplication()->getKernel()->getBundle($bundleName);
-            $bundles[$bundleName] = $bundle;
+            if('app' !== $bundleName) {
+                $bundle = $this->getApplication()->getKernel()->getBundle($bundleName);
+                $bundles[$bundleName] = $bundle;
+            }
         }
 
-        $service->loadBundlesTranslationFiles($bundles, $locales, $domains);
+        $this->loadService->loadBundlesTranslationFiles($bundles, $locales, $domains);
 
         // merge translations
-        $allTranslations = array_replace_recursive($service->getTranslations(), $importTranslations);
+        $allTranslations = array_replace_recursive($this->loadService->getTranslations(), $importTranslations);
 
         // rewrite files (Bundle/domain.locale.yml)
         foreach ($allTranslations as $bundleName => $bundleTranslations) {
@@ -85,8 +108,13 @@ class ImportCommand extends ContainerAwareCommand
                     }
 
                     // determines destination file name
-                    $bundle = $bundles[$bundleName];
-                    $basePath = $bundle->getPath().'/Resources/translations';
+                    if('app' === $bundleName) {
+                        $basePath = $this->loadService->getAppTranslationsPath();
+                    }
+                    else {
+                        $bundle = $bundles[$bundleName];
+                        $basePath = $bundle->getPath().'/Resources/translations';
+                    }
                     $filePath = $basePath.'/'.$domain.'.'.$locale.'.yml';
                     if (!$fs->exists($basePath)) {
                         $fs->mkdir($basePath);
