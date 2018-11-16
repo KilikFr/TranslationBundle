@@ -81,16 +81,18 @@ class ImportCommand extends ContainerAwareCommand
 
         // load existing translations on working bundles
         foreach ($importTranslations as $bundleName => $notused) {
-            if('app' !== $bundleName) {
+            if ('app' !== $bundleName) {
                 $bundle = $this->getApplication()->getKernel()->getBundle($bundleName);
                 $bundles[$bundleName] = $bundle;
+            } else {
+                $bundles['app'] = 'app';
             }
         }
 
         $this->loadService->loadBundlesTranslationFiles($bundles, $locales, $domains);
 
         // merge translations
-        $allTranslations = array_replace_recursive($this->loadService->getTranslations(), $importTranslations);
+        $allTranslations = array_merge_recursive($this->loadService->getTranslations(), $importTranslations);
 
         // rewrite files (Bundle/domain.locale.yml)
         foreach ($allTranslations as $bundleName => $bundleTranslations) {
@@ -108,10 +110,9 @@ class ImportCommand extends ContainerAwareCommand
                     }
 
                     // determines destination file name
-                    if('app' === $bundleName) {
+                    if ('app' === $bundleName) {
                         $basePath = $this->loadService->getAppTranslationsPath();
-                    }
-                    else {
+                    } else {
                         $bundle = $bundles[$bundleName];
                         $basePath = $bundle->getPath().'/Resources/translations';
                     }

@@ -28,7 +28,7 @@ class CsvLoader
 
         $translations = [];
 
-        foreach ($lines as $line) {
+        foreach ($lines as $lineId => $line) {
             $row = explode("\t", $line);
             // detect columns names
             if (is_null($columnsKeys)) {
@@ -60,6 +60,10 @@ class CsvLoader
                     if (in_array($domainName, $domains) || count($domains) == 1 && $domains[0] == 'all') {
                         foreach ($locales as $locale) {
                             // replace new line unescaped by reald newline (works good wy yaml dumper)
+                            if (!isset($row[$localesKeys[$locale]])) {
+                                throw new \Exception('missing column value on line '.$lineId.', column '.$localesKeys[$locale]);
+
+                            }
                             $value = str_replace('\n', "\n", $row[$localesKeys[$locale]]);
                             // keep only non blank translations
                             if ($value) {
