@@ -57,6 +57,7 @@ class ImportCommand extends ContainerAwareCommand
             ->addArgument('csv', InputArgument::REQUIRED, 'Output CSV filename')
             ->addOption('domains', null, InputOption::VALUE_OPTIONAL, 'Domains', 'all')
             ->addOption('bundles', null, InputOption::VALUE_OPTIONAL, 'Limit to bundles', 'all')
+            ->addOption('overwrite-existing', 'o', InputOption::VALUE_NONE, 'Overwrite the existing translations, instead of merging them');
             ->addOption('separator', 's', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
     }
 
@@ -94,8 +95,11 @@ class ImportCommand extends ContainerAwareCommand
 
         $this->loadService->loadBundlesTranslationFiles($bundles, $locales, $domains);
 
-        // merge translations
-        $allTranslations = array_merge_recursive($this->loadService->getTranslations(), $importTranslations);
+        $allTranslations = $importTranslations;
+        // merge translations if we do not overwrite the data
+        if (!$this->input->getOption('overwrite-existing')) {
+            $allTranslations = array_merge_recursive($this->loadService->getTranslations(), $importTranslations);
+        }
 
         // rewrite files (Bundle/domain.locale.yml)
         foreach ($allTranslations as $bundleName => $bundleTranslations) {
