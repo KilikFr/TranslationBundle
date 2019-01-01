@@ -15,12 +15,13 @@ class CsvLoader
      * @param array $bundles bundles names to load
      * @param array $domains domains to load
      * @param array $locales locales to load
+     * @param string $separator
      *
      * @throws \Exception
      *
      * @return array
      */
-    public static function load($filepath, $bundles, $domains, $locales)
+    public static function load($filepath, $bundles, $domains, $locales, $separator = "\t")
     {
         $lines = file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $localesKeys = [];
@@ -29,7 +30,7 @@ class CsvLoader
         $translations = [];
 
         foreach ($lines as $lineId => $line) {
-            $row = explode("\t", $line);
+            $row = explode($separator, $line);
             // detect columns names
             if (is_null($columnsKeys)) {
                 $columnsKeys = [];
