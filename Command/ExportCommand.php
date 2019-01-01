@@ -46,7 +46,8 @@ class ExportCommand extends ContainerAwareCommand
             ->addArgument('bundles', InputArgument::REQUIRED, 'Bundles scope (app for symfony4 core application)')
             ->addArgument('csv', InputArgument::REQUIRED, 'Output CSV filename')
             ->addOption('domains', null, InputOption::VALUE_OPTIONAL, 'Domains', 'all')
-            ->addOption('only-missing', null, InputOption::VALUE_NONE, 'Export only missing translations');
+            ->addOption('only-missing', null, InputOption::VALUE_NONE, 'Export only missing translations')
+            ->addOption('separator', 's', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
     }
 
     /**
@@ -59,6 +60,8 @@ class ExportCommand extends ContainerAwareCommand
         $locale = $input->getArgument('locale');
         $locales = explode(',', $input->getArgument('locales'));
         $domains = explode(',', $input->getOption('domains'));
+
+        $separator = $input->getOption('separator');
 
         // load all translations
         foreach ($bundlesNames as $bundleName) {
@@ -90,7 +93,7 @@ class ExportCommand extends ContainerAwareCommand
             $columns[] = $localeColumn;
         }
 
-        $buffer = implode("\t", $columns).PHP_EOL;
+        $buffer = implode($separator, $columns).PHP_EOL;
 
         foreach ($this->loadService->getTranslations() as $bundleName => $domains) {
             foreach ($domains as $domain => $translations) {
@@ -115,7 +118,7 @@ class ExportCommand extends ContainerAwareCommand
                     }
 
                     if (!$input->getOption('only-missing') || $missing) {
-                        $buffer .= implode("\t", $data).PHP_EOL;
+                        $buffer .= implode($separator, $data).PHP_EOL;
                     }
                 }
             }

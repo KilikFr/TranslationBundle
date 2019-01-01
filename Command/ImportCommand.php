@@ -58,6 +58,7 @@ class ImportCommand extends ContainerAwareCommand
             ->addOption('domains', null, InputOption::VALUE_OPTIONAL, 'Domains', 'all')
             ->addOption('bundles', null, InputOption::VALUE_OPTIONAL, 'Limit to bundles', 'all')
             ->addOption('overwrite-existing', 'o', InputOption::VALUE_NONE, 'Overwrite the existing translations, instead of merging them');
+            ->addOption('separator', 's', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
     }
 
     /**
@@ -75,7 +76,9 @@ class ImportCommand extends ContainerAwareCommand
         $locales = explode(',', $input->getArgument('locales'));
 
         // load CSV file
-        $importTranslations = CsvLoader::load($input->getArgument('csv'), $bundlesNames, $domains, $locales);
+        $importTranslations = CsvLoader::load(
+            $input->getArgument('csv'), $bundlesNames, $domains, $locales, $input->getOption('separator')
+        );
 
         // load translations for matched bundles
         $bundles = [];
