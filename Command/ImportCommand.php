@@ -58,7 +58,7 @@ class ImportCommand extends ContainerAwareCommand
             ->addOption('domains', null, InputOption::VALUE_OPTIONAL, 'Domains', 'all')
             ->addOption('bundles', null, InputOption::VALUE_OPTIONAL, 'Limit to bundles', 'all')
             ->addOption('overwrite-existing', 'o', InputOption::VALUE_NONE, 'Overwrite the existing translations, instead of merging them')
-            ->addOption('separator', 's', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
+            ->addOption('separator', 'sep', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
     }
 
     /**
