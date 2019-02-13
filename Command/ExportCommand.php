@@ -47,7 +47,7 @@ class ExportCommand extends ContainerAwareCommand
             ->addArgument('csv', InputArgument::REQUIRED, 'Output CSV filename')
             ->addOption('domains', null, InputOption::VALUE_OPTIONAL, 'Domains', 'all')
             ->addOption('only-missing', null, InputOption::VALUE_NONE, 'Export only missing translations')
-            ->addOption('separator', 's', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
+            ->addOption('separator', 'sep', InputOption::VALUE_REQUIRED, 'The character used as separator', "\t");
     }
 
     /**
