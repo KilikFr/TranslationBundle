@@ -30,14 +30,22 @@ class LoadTranslationService
     private $rootDir = null;
 
     /**
+     * Translation Path.
+     *
+     * @var string
+     */
+    private $translationPath;
+
+    /**
      * LoadTranslationService constructor.
      *
      * @param string $rootDir
      */
-    public function __construct($rootDir)
+    public function __construct($rootDir, $translationPath)
     {
         $this->rootDir = $rootDir;
         $this->translations = [];
+        $this->translationPath = $translationPath;
     }
 
     /**
@@ -47,7 +55,7 @@ class LoadTranslationService
      */
     public function getAppTranslationsPath()
     {
-        return $this->rootDir.'/../translations';
+        return $this->translationPath;
     }
 
     /**
