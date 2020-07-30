@@ -8,6 +8,7 @@ namespace Kilik\TranslationBundle\Command;
 use Kilik\TranslationBundle\Components\CsvLoader;
 use Kilik\TranslationBundle\Services\LoadTranslationService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +18,7 @@ use Symfony\Component\Yaml\Dumper;
 /**
  * Class ImportCommand.
  */
-class ImportCommand extends ContainerAwareCommand
+class ImportCommand extends Command
 {
 
     /**
