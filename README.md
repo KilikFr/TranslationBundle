@@ -82,3 +82,17 @@ you can also import translations with many locales:
 import translations from your CSV file, for application only translations (Symfony 3.4+ / Symfony 4+1):
 
     ./bin/console kilik:translation:import fr --bundles app ~/translations.csv
+
+For bundle developpers
+======================
+
+```shell
+# prepare tests
+./prepare-tests.sh
+
+# run tests
+./run-tests.sh
+
+# launch composer
+./scripts/composer.sh
+```

@@ -53,7 +53,7 @@ class LoadTranslationService
      *
      * @return string
      */
-    public function getAppTranslationsPath()
+    public function getAppTranslationsPath(): string
     {
         return $this->translationPath;
     }
@@ -64,7 +64,7 @@ class LoadTranslationService
      * @param array $locales
      * @param array $domains
      */
-    public function loadAppTranslationFiles($locales, $domains)
+    public function loadAppTranslationFiles(array $locales, array $domains)
     {
         $path = $this->getAppTranslationsPath();
         $finder = $this->findTranslationsFiles($path, $locales, $domains, false);
@@ -78,7 +78,7 @@ class LoadTranslationService
      * @param array $locales
      * @param array $domains
      */
-    public function loadBundlesTranslationFiles($bundles, $locales, $domains)
+    public function loadBundlesTranslationFiles(array $bundles, array $locales, array $domains)
     {
         if (isset($bundles['app'])) {
             $this->loadAppTranslationFiles($locales, $domains);
@@ -98,7 +98,7 @@ class LoadTranslationService
      * @param array           $locales
      * @param array           $domains
      */
-    public function loadBundleTranslationFiles(BundleInterface $bundle, $locales, $domains)
+    public function loadBundleTranslationFiles(BundleInterface $bundle, array $locales, array $domains)
     {
         $path = $bundle->getPath();
         $finder = $this->findTranslationsFiles($path, $locales, $domains);
@@ -115,7 +115,7 @@ class LoadTranslationService
      *
      * @return \Symfony\Component\Finder\Finder
      */
-    protected function findTranslationsFiles($path, array $locales, array $domains, $autocompletePath = true)
+    protected function findTranslationsFiles(string $path, array $locales, array $domains, bool $autocompletePath = true)
     {
         $finder = null;
         if (preg_match('#^win#i', PHP_OS)) {
@@ -126,6 +126,7 @@ class LoadTranslationService
         } else {
             $dir = $path;
         }
+        exec('ls -l '.$dir);
         if (is_dir($dir)) {
             $finder = new Finder();
             $finder->files()
@@ -142,11 +143,9 @@ class LoadTranslationService
      * @param string $bundleName
      * @param Finder $finder
      */
-    protected function loadTranslationFiles($bundleName, $finder)
+    protected function loadTranslationFiles(string $bundleName, Finder $finder = null)
     {
         if (!$finder instanceof Finder) {
-            //$this->output->writeln('No file to import');
-
             return;
         }
         foreach ($finder as $file) {
@@ -164,7 +163,7 @@ class LoadTranslationService
      * @param string      $domain
      * @param string      $locale
      */
-    protected function loadTranslationFile(SplFileInfo $file, $bundleName, $domain, $locale)
+    protected function loadTranslationFile(SplFileInfo $file, string $bundleName, string $domain, string $locale)
     {
         $lines = Yaml::parse(file_get_contents($file->getPathname()));
         if (is_array($lines)) {
@@ -181,7 +180,7 @@ class LoadTranslationService
      * @param string $locale
      * @param string $prefix
      */
-    protected function loadTranslationFromArray($lines, $bundleName, $domain, $locale, $prefix = '')
+    protected function loadTranslationFromArray(array $lines, string $bundleName, string $domain, string $locale, string $prefix = '')
     {
         foreach ($lines as $key => $value) {
             $fullKey = ($prefix != '' ? $prefix.'.' : '').$key;
@@ -217,7 +216,7 @@ class LoadTranslationService
      *
      * @return array
      */
-    public function getTranslations()
+    public function getTranslations(): array
     {
         return $this->translations;
     }
