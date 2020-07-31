@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Dumper;
 
 /**
@@ -70,7 +71,7 @@ class ImportCommand extends Command
         $this->input = $input;
         $this->output = $output;
 
-        $fs = $this->getContainer()->get('filesystem');
+        $fs = new Filesystem();
 
         $bundlesNames = explode(',', $input->getOption('bundles'));
         $domains = explode(',', $input->getOption('domains'));
