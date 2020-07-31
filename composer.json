@@ -12,7 +12,9 @@
   ],
   "require": {
     "php": "^7.2",
-    "symfony/yaml": "^4.0||^5.0"
+    "symfony/yaml": "^4.0||^5.0",
+    "symfony/finder": "^4.0||^5.0",
+    "symfony/filesystem": "^4.0||^5.0"
   },
   "require-dev": {
     "symfony/http-kernel": "^4.0||^5.0",
