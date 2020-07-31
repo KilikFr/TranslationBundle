@@ -2,6 +2,11 @@
 
 namespace Kilik\TranslationBundle\Components;
 
+use Kilik\TranslationBundle\Exception\DataException;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Translation\Loader\FileLoader;
+
 /**
  * Class CsvLoader
  */
@@ -11,19 +16,28 @@ class CsvLoader
     /**
      * Load CSV File.
      *
-     * @param       $filepath
-     * @param array $bundles bundles names to load
-     * @param array $domains domains to load
-     * @param array $locales locales to load
+     * @param        $filepath
+     * @param array  $bundles bundles names to load
+     * @param array  $domains domains to load
+     * @param array  $locales locales to load
      * @param string $separator
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
-    public static function load($filepath, $bundles, $domains, $locales, $separator = "\t")
+    public static function load($filepath, $bundles, $domains, $locales, $separator = "\t"): array
     {
-        $lines = file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (!file_exists($filepath)) {
+            throw new FileNotFoundException(sprintf('File "%s" not found.', $filepath));
+        }
+
+        $lines = @file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        if (false === $lines) {
+            throw new IOException('Error loading "%s".', $filepath);
+        }
+
         $localesKeys = [];
         $columnsKeys = null;
 
@@ -41,14 +55,14 @@ class CsvLoader
                 // check mandatory columns
                 foreach (['Bundle', 'Domain', 'Key'] as $mandatoryColumn) {
                     if (!in_array($mandatoryColumn, $row)) {
-                        throw new \Exception('mandatory column '.$mandatoryColumn.' is missing');
+                        throw new DataException('mandatory column '.$mandatoryColumn.' is missing');
                     }
                 }
                 // check wanted locales
                 foreach ($locales as $locale) {
                     $localeKey = array_search($locale, $row);
                     if ($localeKey === false) {
-                        throw new \Exception('locale column '.$locale.' is missing');
+                        throw new DataException('locale column '.$locale.' is missing');
                     }
                     // keep column id
                     $localesKeys[$locale] = $localeKey;
@@ -62,8 +76,7 @@ class CsvLoader
                         foreach ($locales as $locale) {
                             // replace new line unescaped by reald newline (works good wy yaml dumper)
                             if (!isset($row[$localesKeys[$locale]])) {
-                                throw new \Exception('missing column value on line '.$lineId.', column '.$localesKeys[$locale]);
-
+                                throw new DataException('missing column value on line '.$lineId.', column '.$localesKeys[$locale]);
                             }
                             $value = str_replace('\n', "\n", $row[$localesKeys[$locale]]);
                             // keep only non blank translations
