@@ -67,6 +67,10 @@ import all translations from your CSV file, for a given locales:
 
     ./bin/console kilik:translation:import fr ~/translations.csv
 
+import all translations from your CSV file, overriding existing translation keys:
+
+    ./bin/console kilik:translation:import fr ~/translations.csv -o
+
 import translations from your CSV file, for a specific bundle, for a given locales:
 
     ./bin/console kilik:translation:import fr --bundles AcmeBundle ~/translations.csv
