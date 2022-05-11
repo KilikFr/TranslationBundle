@@ -100,7 +100,7 @@ class ImportCommand extends Command
         $allTranslations = $importTranslations;
         // merge translations if we do not overwrite the data
         if (!$this->input->getOption('overwrite-existing')) {
-            $allTranslations = array_merge_recursive($this->loadService->getTranslations(), $importTranslations);
+             $allTranslations = array_replace_recursive($this->loadService->getTranslations(), $importTranslations);
         }
 
         // rewrite files (Bundle/domain.locale.yml)
