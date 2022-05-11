@@ -126,6 +126,7 @@ class ExportCommand extends Command
         }
         file_put_contents($input->getArgument('csv'), $buffer);
         $output->writeln('<info>Saving translations to : '.$input->getArgument('csv').' (CSV tab separated value).</info>');
+        return Command::SUCCESS;
     }
 
     /**
