@@ -146,6 +146,7 @@ class ImportCommand extends Command
                 }
             }
         }
+        return Command::SUCCESS;
     }
 
     /**
